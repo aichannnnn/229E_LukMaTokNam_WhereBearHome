@@ -1,8 +1,5 @@
 ﻿using System.Collections;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
 using System.Collections.Generic;
 
 public class DialogueSensor : MonoBehaviour
@@ -16,21 +13,26 @@ public class DialogueSensor : MonoBehaviour
     public string messageKey;
     private Dictionary<string, string> messages;
 
+    TargetPoint targetPoint;
+
     private void Start()
     {
         messages = new Dictionary<string, string>()
         {
-            {"Muk", "Real bad! I don't know how to swim!"},
-            {"O", "OMG how i do this"},
+            {"Muk", "That's awful! I really don't want my shoes to get wet!"},
+            {"Spike", "This little thorn looks so scary"},
+            {"Goal", "Finally home! I can't wait to eat the snacks I brought!"},
         };
     }
     
     private void Awake()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        targetPoint = GameObject.Find("Point").GetComponentInChildren<TargetPoint>();
     }
     private void Update()
     {
+
         if (isDialogueActive)
         {
             if (Time.time - timeStarted > displayDuration)
@@ -44,7 +46,13 @@ public class DialogueSensor : MonoBehaviour
                 isDialogueActive = false;
                 gameManager.pushScreen.SetActive(false);
                 Destroy(this.gameObject);
-            }
+            } 
+            if (Time.time - timeStarted > displayDuration && gameObject.CompareTag("GoalLine"))
+            {
+                isDialogueActive = false;
+                gameManager.dialogueScreen.SetActive(false);
+                Destroy(this.gameObject);
+            }  
         }
     }
 
@@ -67,7 +75,7 @@ public class DialogueSensor : MonoBehaviour
             }
             if(gameObject.CompareTag("1stObstracle"))
             {
-                ShowDialogue("O");
+                ShowDialogue("Spike");
                 timeStarted = Time.time;
                 isDialogueActive = true;
             }
@@ -77,8 +85,25 @@ public class DialogueSensor : MonoBehaviour
                 timeStarted = Time.time;
                 isDialogueActive = true;
             }
+            if(gameObject.CompareTag("GoalLine"))
+            {
+                ShowDialogue("Goal");
+                timeStarted = Time.time;
+                isDialogueActive = true;               
+            }
+            if(gameObject.CompareTag("End"))
+            {   
+              gameManager.Victory(targetPoint.point);
+            }
         }
     }
+
+    IEnumerator ChangeScreen()
+    {
+        yield return new WaitForSeconds(3f);
+        gameManager.EndScreen.SetActive(false);
+        gameManager.CreditScreen.SetActive(true);
+    } 
     public void ShowDialogue(string messageKey)
     {
         if (!isDialogueActive && messages.ContainsKey(messageKey))

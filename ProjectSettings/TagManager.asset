@@ -9,6 +9,9 @@ TagManager:
   - 1stObstracle
   - Muk
   - Pushalble
+  - GoalLine
+  - Point
+  - End
   layers:
   - Default
   - TransparentFX

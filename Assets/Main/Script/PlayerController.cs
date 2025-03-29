@@ -4,19 +4,23 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+
     public float jumpForce;
     public float speed;
     public float gravityModifier;
     private bool isOnGround = true;
     private bool isGameOver = false;
+    public int point = 10;
 
     private Rigidbody rb;
     GameManager gameManager;
 
     private InputAction moveAction;
     private InputAction jumpAction;
+    public AudioSource playerAudio;
+    public AudioClip jumpFx;
+    public AudioClip crashFx;
 
-    //private Vector3 initialPosition;  
     private Quaternion initialRotation; 
 
     private void Awake()
@@ -44,10 +48,8 @@ public class PlayerController : MonoBehaviour
         {
             ResetPositionAndRotation();
         }
-
         float horizontal = 0f;
         float vertical = 0f;
-
         if (Input.GetKey(KeyCode.W))
         {
             horizontal = 1f;
@@ -70,12 +72,10 @@ public class PlayerController : MonoBehaviour
 
         transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
 
-
-
-
         if (jumpAction.triggered && isOnGround == true)
         {
             rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
+            playerAudio.PlayOneShot(jumpFx, 1);
             isOnGround = false;
         }
     }
@@ -88,10 +88,13 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Obstracle"))
         {
+            playerAudio.PlayOneShot(crashFx, 5);
             Debug.Log("Our baby can't go home!");
+            gameManager.TutorialItemText.gameObject.SetActive(false);
+            gameManager.pointText.gameObject.SetActive(false);
             isGameOver = true;
             GameOver();
-        }
+        } 
     }
     private void ResetPositionAndRotation()
     {
@@ -107,6 +110,8 @@ public class PlayerController : MonoBehaviour
         {
             Time.timeScale = 0f;
             gameManager.gameOverScreen.SetActive(true);
+            gameManager.dialogueScreen.SetActive(false);
+            gameManager.pushScreen.SetActive(false);
         }
     }
 }
