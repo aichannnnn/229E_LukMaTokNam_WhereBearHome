@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
         if (jumpAction.triggered && isOnGround == true)
         {
             rb.AddForce(jumpForce * Vector3.up, ForceMode.Impulse);
-            playerAudio.PlayOneShot(jumpFx, 1);
+            playerAudio.PlayOneShot(jumpFx, 5);
             isOnGround = false;
         }
     }

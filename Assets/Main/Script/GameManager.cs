@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     public Button nextButton;
     public Button exitButton;
 
-    private int score;
+    public int score;
 
     DialogueSensor dialogueSensor;
 

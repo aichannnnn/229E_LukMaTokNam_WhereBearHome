@@ -20,8 +20,8 @@ public class DialogueSensor : MonoBehaviour
         messages = new Dictionary<string, string>()
         {
             {"Muk", "That's awful! I really don't want my shoes to get wet!"},
-            {"Spike", "This little thorn looks so scary"},
-            {"Goal", "Finally home! I can't wait to eat the snacks I brought!"},
+            {"Spike", "Those little thorn looks so scary... Don't hit them!"},
+            {"Goal", "Finally home! I can't wait to make cake!"},
         };
     }
     
@@ -93,7 +93,7 @@ public class DialogueSensor : MonoBehaviour
             }
             if(gameObject.CompareTag("End"))
             {   
-              gameManager.Victory(targetPoint.point);
+              gameManager.Victory(gameManager.score);
             }
         }
     }
